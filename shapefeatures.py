@@ -256,4 +256,4 @@ def _singleattribute(img, attribute):
 if __name__ == '__main__':
     img = cv2.imread(sys.argv[1], cv2.IMREAD_GRAYSCALE)
     features = extract(img)
-    print features
+    print (features)

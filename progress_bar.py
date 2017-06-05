@@ -14,7 +14,7 @@ class ProgressBar:
         except Exception:
             # terminal IPython has no clear_output
             pass
-        print '\r', self,
+        print ('\r'), self,
         sys.stdout.flush()
         self.update_iteration(iter + 1)
         

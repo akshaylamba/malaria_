@@ -205,7 +205,7 @@ def create_patches(img_basenames, annotation_dir, image_dir, size, step, graysca
     np_labels = np.empty(len(patches),dtype=int)
 
     max_pos=len(pos)
-    for i,j in zip(index,xrange(len(index))):
+    for i,j in zip(index,range(len(index))):
         if i < max_pos:
             np_patches[j,] = pos[i]
             np_labels[j] = 1
@@ -245,7 +245,7 @@ def augment(X,y):
     new_patch_order = np.arange(shape[0])
     np.random.shuffle(new_patch_order)
 
-    for i,j in zip(new_patch_order,xrange(shape[0])):
+    for i,j in zip(new_patch_order,range(shape[0])):
         orig_patch = i/8
         rot_n = i%4
         do_flip = i%8>3
@@ -280,6 +280,27 @@ def augment_positives(X,y):
     aug_y = aug_y.astype('uint8')
 
     return aug_X, aug_y
+
+
+
+def augment_negative(X,y):
+    '''Create rotated and flipped versions of only the positive-labelled
+    patches.'''
+    pos_indices = np.where(y==0)[0]
+    neg_indices = np.where(y==1)[0]
+
+    aug_X_pos, aug_y_pos = augment(X[pos_indices,], y[pos_indices])
+    aug_X = np.vstack((aug_X_pos, X[neg_indices,]))
+    aug_y = np.hstack((aug_y_pos, y[neg_indices]))
+
+    new_order = np.random.permutation(aug_y.shape[0])
+    aug_X = aug_X[new_order,]
+    aug_y = aug_y[new_order]
+
+    aug_y = aug_y.astype('uint8')
+
+    return aug_X, aug_y
+
 
 
 def get_bounding_boxes_for_single_image(filename, objectclass=None):
